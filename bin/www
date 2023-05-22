@@ -1,14 +1,14 @@
 // IMPORTING MODULES/PACKAGES
-var debug = require('debug')('diagonostics:server')
-var app = require('../app')
-var http = require('http')
+const debug = require('debug')('diagonostics:server')
+const app = require('../app')
+const http = require('http')
 
 // GETTING PORT FROM ENVIRONMENT & SETTING IT FOR EXPRESS
-var port = normalizePort(process.env.PORT || '3000')
+const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
 // CREATING HTTP SERVER
-var server = http.createServer(app)
+const server = http.createServer(app)
 
 // Listen on provided port, on all network interfaces
 server.listen(port)
@@ -18,8 +18,7 @@ server.on('listening', onListening)
 // METHODS
 // NORMALISE PORT NO.
 function normalizePort(val) {
-  var port = parseInt(val, 10)
-  // named pipe
+  const port = parseInt(val, 10)
   if (isNaN(port)) return val
   if (port >= 0) return port
   return false
@@ -31,7 +30,7 @@ function onError(error) {
     throw error
   }
 
-  var bind = typeof port === 'string' ? 'PIPE ' + port : 'PORT ' + port
+  const bind = typeof port === 'string' ? 'PIPE ' + port : 'PORT ' + port
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -50,7 +49,7 @@ function onError(error) {
 
 // Event listener for HTTP server "listening" event
 function onListening() {
-  var addr = server.address()
-  var bind = typeof addr === 'string' ? 'PIPE ' + addr : 'PORT ' + addr.port
+  const addr = server.address()
+  const bind = typeof addr === 'string' ? 'PIPE ' + addr : 'PORT ' + addr.port
   debug('LISTENING ON ' + bind)
 }

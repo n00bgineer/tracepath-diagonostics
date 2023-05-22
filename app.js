@@ -1,12 +1,12 @@
 // IMPORTING MODULES/PACKAGES
-var path = require('path')
-var express = require('express')
-var logger = require('morgan')
-var cookieParser = require('cookie-parser')
-var indexRouter = require('./routes/index')
+const path = require('path')
+const express = require('express')
+const logger = require('morgan')
+const cookieParser = require('cookie-parser')
+const indexRouter = require('./routes/index')
 
 // INITIALISING EXPRESS
-var app = express()
+const app = express()
 
 app.use(logger('dev'))
 app.use(express.json())
