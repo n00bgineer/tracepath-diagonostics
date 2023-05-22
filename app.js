@@ -16,6 +16,6 @@ app.use(cookieParser())
 // TODO: SETUP ENDPOINT AUTH MIDDLEWARE
 
 // SETTING ROUTES
-app.use('/', indexRouter)
+app.use('/api', indexRouter)
 
 module.exports = app
