@@ -78,8 +78,8 @@ The server will start running on the specified port (default: 3000). You can acc
 The diagnostic server provides the following API endpoints:
 
 ```
-GET /status: Check if the server is running and responsive.
-POST /report: Submit a report generation request to the server.
+GET /api/status: Check if the server is running and responsive.
+POST /api/report: Submit a report generation request to the server.
 ```
 
 ## API Documentation
