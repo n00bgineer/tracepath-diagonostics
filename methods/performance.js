@@ -85,7 +85,7 @@ const performance = async (url) => {
 
     return {
       performanceData: performanceData,
-      executionTime: endTime - startTime,
+      executionTimePerf: endTime - startTime,
     }
   } catch (error) {
     console.error(error)

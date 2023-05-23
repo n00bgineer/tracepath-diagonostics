@@ -133,6 +133,9 @@ const getGeolocation = async (ip) => {
  * @returns {Object} TracerouteData
  */
 const traceroute = async (url) => {
+  // STORING START & END TIME TO CALCULATE EXECUTION TIME OF TRACEROUTING FUNC.
+  const startTime = Date.now()
+
   return new Promise((resolve, reject) => {
     // STORING TRACEROUTING DATA
     let TracerouteData = {
@@ -197,8 +200,13 @@ const traceroute = async (url) => {
           ),
         }
 
+        const endTime = Date.now()
+
         // RESOLVING REQUEST
-        resolve(TracerouteData)
+        resolve({
+          tracerouteData: TracerouteData,
+          executionTimeTrace: endTime - startTime,
+        })
       })
       .on('error', (error) => {
         console.error(error)
