@@ -51,8 +51,8 @@ const geolocateMaxmind = async (ip) => {
         longitude: geolocationData.location.longitude,
       }
     }
-  } catch (err) {
-    console.log(`ERR (GEOLOCATION/PANGEA): `, err.code)
+  } catch (error) {
+    console.log(`ERROR (GEOLOCATION/PANGEA): `, error.code)
     return null
   }
 }
@@ -92,8 +92,8 @@ const geolocatePangea = async (ip) => {
         longitude: geolocationData.result.data.country.longitude,
       }
     } else throw 'CANNOT BE GEOLOCATED'
-  } catch (err) {
-    console.log(`ERR (GEOLOCATION/MAXMIND): `, err)
+  } catch (error) {
+    console.log(`ERROR (GEOLOCATION/MAXMIND): `, error)
     return null
   }
 }
@@ -201,7 +201,8 @@ const traceroute = async (url) => {
         resolve(TracerouteData)
       })
       .on('error', (error) => {
-        reject(error)
+        console.error(error)
+        reject(null)
       })
 
     console.log(`STARTING TRACEROUTING ON URL: ${url}`)
