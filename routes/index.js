@@ -1,6 +1,7 @@
 // IMPORTING MODULES/PACKAGES
 const express = require('express')
 const traceroute = require('../methods/traceroute')
+const performance = require('../methods/performance')
 const router = express.Router()
 
 // METHODS
@@ -31,19 +32,36 @@ router.post('/report', async (req, res, next) => {
 
   // CHECKING FOR EMPTY URL VALUE
   if (!url) {
-    res.status(400).json({ error: 'URL is required' })
+    res.status(400).json({ error: 'URL IS REQUIRED' })
     return
   }
   // CHECKING URL FORMAT
   else if (!isValidURL(url)) {
-    res.status(400).json({ error: 'Invalid URL' })
+    res.status(400).json({ error: 'INVALID URL' })
     return
   }
   // FOR VALID URL
   else {
-    const output = await traceroute(url)
-    res.status(200).json(output)
-    return
+    // STORING TRACEROUTING & PERFORMANCE DATA
+    try {
+      const { tracerouteData, executionTimeTrace } = await traceroute(url)
+      const { performanceData, executionTimePerf } = await performance(
+        'https://' + url
+      )
+      // RESPONSE
+      res.status(200).json({
+        ...performanceData,
+        traceroute: tracerouteData,
+        executionTime: executionTimePerf + executionTimeTrace,
+        isTracerouteError: tracerouteData === null,
+        isLighthouseError: performanceData === null,
+      })
+      return
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: 'ERROR OCCURED WHILE GENERATING REPORT' })
+      return
+    }
   }
 })
 
