@@ -11,7 +11,7 @@ const runLighthouse = async (url) => {
 
   // LAUNCHING CHROME
   const chrome = await launch({
-    port: 3001,
+    port: process.env.CHROME_PORT,
     chromeFlags: ['--headless', '--disable-gpu'],
   })
 

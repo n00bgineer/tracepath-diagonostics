@@ -1,10 +1,15 @@
 // IMPORTING MODULES/PACKAGES
 const debug = require('debug')('diagonostics:server')
+const path = require('path')
 const app = require('../app')
 const http = require('http')
 
+const env = require('dotenv').config({
+  path: path.join(path.dirname(__dirname), '.env'),
+})
+
 // GETTING PORT FROM ENVIRONMENT & SETTING IT FOR EXPRESS
-const port = normalizePort(process.env.PORT || '3000')
+const port = normalizePort(process.env.SERVER_PORT || '3000')
 app.set('port', port)
 
 // CREATING HTTP SERVER
