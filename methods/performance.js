@@ -22,6 +22,7 @@ const runLighthouse = async (url) => {
     port: Chrome.port,
     output: 'json',
     logLevel: 'info',
+    timeout: 600,
   })
 
   // KILLING CHROME INSTANCE AND RETURNING RESPONSE

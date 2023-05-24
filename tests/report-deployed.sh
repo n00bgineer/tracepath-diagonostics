@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d '{"url":"google.com"}' http://13.49.65.173:3000/api/report -o ./output/google-dtest.json
