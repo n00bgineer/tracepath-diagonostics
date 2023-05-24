@@ -1,4 +1,5 @@
 // IMPORTING MODULES/PACKAGES
+const { URL } = require('url')
 const express = require('express')
 const traceroute = require('../methods/traceroute')
 const performance = require('../methods/performance')
@@ -15,6 +16,31 @@ const isValidURL = (url) => {
   // NOTE: URL MUST HAVE EITHER HTTP OR HTTPS PROTOCOL PREFIXED TO IT
   const pattern = /^(?:https?:\/\/)?(?:www\.)?[^\s.]+\.[^\s]{2,}$/i
   return pattern.test(url)
+}
+
+/**
+ * @name addProtocol
+ * @description METHOD TO ADD PROTOCOL
+ * @param {*} url URL
+ * @returns {String} URL WITH PROTOCOL
+ */
+const addProtocol = (url) => {
+  let url = urlString
+  if (!urlString.includes('://')) url = 'https://' + urlString
+  return urlString
+}
+/**
+ * @name removeProtocol
+ * @description METHOD TO REMOVE PROTOCOL
+ * @param {*} urlString INPUT URL
+ * @returns {String} URL WITHOUT PROTOCOL
+ */
+const removeProtocol = (urlString) => {
+  let url = urlString
+  if (!urlString.includes('://')) url = 'http://' + urlString
+  const parsedUrl = new URL(url)
+  const hostname = parsedUrl.hostname
+  return hostname
 }
 
 // HANDING ROUTES
@@ -44,9 +70,13 @@ router.post('/report', async (req, res, next) => {
   else {
     // STORING TRACEROUTING & PERFORMANCE DATA
     try {
-      const { tracerouteData, executionTimeTrace } = await traceroute(url)
+      // TRACEROUTE ONLY ACCEPTS URL WITH NO PROTOCOL
+      const { tracerouteData, executionTimeTrace } = await traceroute(
+        removeProtocol(url)
+      )
+      // TRACEROUTE ONLY ACCEPTS URL WITH PROTOCOL
       const { performanceData, executionTimePerf } = await performance(
-        'https://' + url
+        addProtocol(url)
       )
       // RESPONSE
       res.status(200).json({
