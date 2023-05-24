@@ -4,6 +4,7 @@ const express = require('express')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const indexRouter = require('./routes/index')
+require('dotenv').config()
 
 // INITIALISING EXPRESS
 const app = express()

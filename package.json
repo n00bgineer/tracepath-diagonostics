@@ -11,6 +11,7 @@
     "chrome-launcher": "^0.15.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dot-env": "^0.0.1",
     "express": "~4.16.1",
     "lighthouse": "^10.2.0",
     "morgan": "~1.9.1",
