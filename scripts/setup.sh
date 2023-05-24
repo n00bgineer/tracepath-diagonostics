@@ -16,7 +16,3 @@ npm install -g npm@latest
 git clone https://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@github.com/n00bgineer/tracepath-diagonostics ./diagonostics
 cd diagonostics
 npm i
-export PANGEA_TOKEN=pts_z3qrpgcz25ienbo625uztaofkglismmj
-export MAXMIND_ACCOUNT_NO=865383
-export MAXMIND_TOKEN=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
-export PORT=443
