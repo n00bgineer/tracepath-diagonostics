@@ -34,21 +34,21 @@ const geolocateMaxmind = async (ip) => {
   // SETTING LOCAL VARIABLES
   const token = process.env.MAXMIND_TOKEN
   const accountNumber = process.env.MAXMIND_ACCOUNT_NO
-  const client = new WebServiceClient(accountNumber, token, {
+  const Client = new WebServiceClient(accountNumber, token, {
     host: 'geolite.info',
   })
 
   // EXECUTING GEOLOCATION
   try {
-    const geolocationData = await client.city(ip)
-    if (geolocationData.location === undefined) throw 'CANNOT BE GEOLOCATED'
+    const GeolocationData = await Client.city(ip)
+    if (GeolocationData.location === undefined) throw 'CANNOT BE GEOLOCATED'
     else {
       return {
-        country: geolocationData.country?.names.en.toUpperCase(),
-        city: geolocationData.city?.names.en.toUpperCase(),
-        postalCode: geolocationData.postal?.code,
-        latitude: geolocationData.location.latitude,
-        longitude: geolocationData.location.longitude,
+        country: GeolocationData.country?.names.en.toUpperCase(),
+        city: GeolocationData.city?.names.en.toUpperCase(),
+        postalCode: GeolocationData.postal?.code,
+        latitude: GeolocationData.location.latitude,
+        longitude: GeolocationData.location.longitude,
       }
     }
   } catch (error) {
@@ -82,14 +82,14 @@ const geolocatePangea = async (ip) => {
   // EXECUTING GEOLOCATION
   try {
     const response = await fetch(url, options)
-    const geolocationData = await response.json()
-    if (geolocationData.status.toUpperCase() === 'SUCCESS') {
+    const GeolocationData = await response.json()
+    if (GeolocationData.status.toUpperCase() === 'SUCCESS') {
       return {
-        country: geolocationData.result.data.country.toUpperCase(),
-        city: geolocationData.result.data.city.toUpperCase(),
-        postalCode: geolocationData.result.data.postal_code,
-        latitude: geolocationData.result.data.latitude,
-        longitude: geolocationData.result.data.country.longitude,
+        country: GeolocationData.result.data.country.toUpperCase(),
+        city: GeolocationData.result.data.city.toUpperCase(),
+        postalCode: GeolocationData.result.data.postal_code,
+        latitude: GeolocationData.result.data.latitude,
+        longitude: GeolocationData.result.data.country.longitude,
       }
     } else throw 'CANNOT BE GEOLOCATED'
   } catch (error) {
@@ -151,17 +151,17 @@ const traceroute = async (url) => {
         console.log(`TRACEROUTE DESTINATION: ${destination}`)
         TracerouteData.destination = destination
       })
-      .on('hop', (hop) => {
-        console.log(`TRACEROUTE HOP: ${JSON.stringify(hop)}`)
+      .on('hop', (Hop) => {
+        console.log(`TRACEROUTE HOP: ${JSON.stringify(Hop)}`)
         // UNTRACEROUTABLE IP ADDRESS
-        if (hop.ip === IPTypes.UNTRACEROUTABLE)
-          TracerouteData.hops.push({ ...hop, type: 'UNTRACEROUTABLE' })
+        if (Hop.ip === IPTypes.UNTRACEROUTABLE)
+          TracerouteData.hops.push({ ...Hop, type: 'UNTRACEROUTABLE' })
         // PRIVATE IP ADDRESS
-        else if (isPrivateIP(hop.ip))
-          TracerouteData.hops.push({ ...hop, type: 'PRIVATE' })
+        else if (isPrivateIP(Hop.ip))
+          TracerouteData.hops.push({ ...Hop, type: 'PRIVATE' })
         // PUBLIC IP ADDRESS
         else {
-          TracerouteData.hops.push({ ...hop, type: 'PUBLIC' })
+          TracerouteData.hops.push({ ...Hop, type: 'PUBLIC' })
         }
       })
       .on('close', async (code) => {
@@ -187,15 +187,15 @@ const traceroute = async (url) => {
         TracerouteData = {
           ...TracerouteData,
           hops: await Promise.all(
-            TracerouteData.hops.map(async (hop) => {
-              if (hop.type === 'PUBLIC') {
-                console.log(`GEOLOCATING FOR ${hop.ip}`)
-                const geolocationData = await getGeolocation(hop.ip)
+            TracerouteData.hops.map(async (Hop) => {
+              if (Hop.type === 'PUBLIC') {
+                console.log(`GEOLOCATING FOR ${Hop.ip}`)
+                const GeolocationData = await getGeolocation(Hop.ip)
                 return {
-                  ...hop,
-                  ...geolocationData,
+                  ...Hop,
+                  ...GeolocationData,
                 }
-              } else return hop
+              } else return Hop
             })
           ),
         }
