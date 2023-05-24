@@ -27,7 +27,7 @@ const isValidURL = (url) => {
 const addProtocol = (urlString) => {
   let url = urlString
   if (!urlString.includes('://')) url = 'https://' + urlString
-  return urlString
+  return url
 }
 /**
  * @name removeProtocol
