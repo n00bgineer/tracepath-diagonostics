@@ -24,7 +24,7 @@ const isValidURL = (url) => {
  * @param {*} url URL
  * @returns {String} URL WITH PROTOCOL
  */
-const addProtocol = (url) => {
+const addProtocol = (urlString) => {
   let url = urlString
   if (!urlString.includes('://')) url = 'https://' + urlString
   return urlString
