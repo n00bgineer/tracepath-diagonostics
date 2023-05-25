@@ -10,5 +10,6 @@ npx prisma generate
 node setup.js
 
 # STARTING APPLICATION IN BACKGROUND
+cd ..
 cd bin
 pm2 start ./www --name tpath
