@@ -17,5 +17,6 @@ npm install -g npm@latest
 # SETTING UP ACCOUNT
 git clone https://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@github.com/n00bgineer/tracepath-diagonostics ./diagonostics
 cd diagonostics
+touch .env && chmod a+x .env
 npm i
 
