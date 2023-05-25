@@ -30,6 +30,7 @@ const Instance = {
   id: uuidv4(),
   createdAt: new Date().toISOString(),
   updateAt: new Date().toISOString(),
+  authKey: uuidv4(),
   expiryAt: '',
   name: '',
   regionName: '',
