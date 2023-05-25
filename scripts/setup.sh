@@ -1,6 +1,10 @@
 # INSTALLING DEPENDENCIES
 sudo apt-get update
-sudo apt-get install build-essential libssl-dev traceroute chromium-browser
+sudo apt-get install build-essential libssl-dev traceroute snapd
+
+# EXPORTING CHROMIUM BROWSER AND SETTING CHROME_PATH
+sudo snap install chromium
+export CHROME_PATH=$(which chromium-browser)
 
 # INSTALLING NVM & LATEST NODE & NPM VERSION
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
