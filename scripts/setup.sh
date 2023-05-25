@@ -14,3 +14,4 @@ npm install -g npm@latest
 git clone https://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@github.com/n00bgineer/tracepath-diagonostics ./diagonostics
 cd diagonostics
 npm i
+
