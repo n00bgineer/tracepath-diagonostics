@@ -1,6 +1,6 @@
 # INSTALLING DEPENDENCIES
 sudo apt-get update
-sudo apt-get install build-essential libssl-dev traceroute snapd
+sudo apt-get install build-essential libssl-dev traceroute snapd -y
 
 # EXPORTING CHROMIUM BROWSER AND SETTING CHROME_PATH
 sudo snap install chromium
