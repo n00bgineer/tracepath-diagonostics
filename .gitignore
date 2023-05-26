@@ -2,3 +2,5 @@
 /tests/output
 .env
 /**/prisma
+/scripts/setup.sh
+/tests/report-deployed.sh
