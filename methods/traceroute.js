@@ -6,8 +6,7 @@ const { WebServiceClient } = require('@maxmind/geoip2-node')
 // TYPES OF IP ADDRESS
 const IPTypes = {
   UNTRACEROUTABLE: '*',
-  PRIVATE:
-    /^(?:(?:10(?:\.\d{1,3}){3})|(?:100\.(?:6[4-9]|[7-9][0-9]|1[0-1][0-9]|12[0-7])\.(?:\d{1,3}){2})|(?:192\.0\.0\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:192\.0\.2\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:192\.88\.99\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:192\.168(?:\.\d{1,3}){2})|(?:198\.(?:18\.(?:\d{1,3}|25[0-5]|2[0-4]\d)|19\.(?:\d{1,3}|25[0-5]|2[0-4]\d)))|(?:198\.51\.100\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:203\.0\.113\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:22[4-9]\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:23[0-9]\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:2[4-5][0-9]\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:2[0-5]{2}\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})|(?:2[4-9][0-9]\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:25[0-5]\.(?:\d{1,3}|25[0-5]|2[0-4]\d)\.(?:\d{1,3}|25[0-5]|2[0-4]\d))|(?:23[0-9]\.0\.\d{1,3}\.\d{1,3})|(?:24\d\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:25[0-5]\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:255\.\d{1,3}\.\d{1,3}\.\d{1,3}))$/,
+  PRIVATE: null,
   GEOLOCATED: null,
   UNGEOLOCATED: null,
 }
@@ -20,8 +19,49 @@ const IPTypes = {
  * @returns {Boolean} WHETHER PRIVATE IP OR NOT
  */
 const isPrivateIP = (ip) => {
-  const privateIPRegex = IPTypes['PRIVATE']
-  return privateIPRegex.test(ip)
+  // Convert the IP address string to a numeric representation
+  const ipParts = ip.split('.').map(Number)
+  const ipNumber =
+    (ipParts[0] << 24) + (ipParts[1] << 16) + (ipParts[2] << 8) + ipParts[3]
+
+  // Define the IP ranges
+  const ipRanges = [
+    { start: '10.0.0.0', end: '10.255.255.255' },
+    { start: '100.64.0.0', end: '100.127.255.255' },
+    { start: '192.0.0.0', end: '192.0.0.255' },
+    { start: '192.0.2.0', end: '192.0.2.255' },
+    { start: '192.88.99.0', end: '192.88.99.255' },
+    { start: '192.168.0.0', end: '192.168.255.255' },
+    { start: '198.18.0.0', end: '198.19.255.255' },
+    { start: '198.51.100.0', end: '198.51.100.255' },
+    { start: '203.0.113.0', end: '203.0.113.255' },
+    { start: '224.0.0.0', end: '239.255.255.255' },
+    { start: '233.252.0.0', end: '233.252.0.255' },
+    { start: '240.0.0.0', end: '255.255.255.255' },
+    { start: '172.16.0.0', end: '172.31.255.255' },
+  ]
+
+  // Check if the IP address falls within any of the IP ranges
+  for (const range of ipRanges) {
+    const startParts = range.start.split('.').map(Number)
+    const endParts = range.end.split('.').map(Number)
+    const startNumber =
+      (startParts[0] << 24) +
+      (startParts[1] << 16) +
+      (startParts[2] << 8) +
+      startParts[3]
+    const endNumber =
+      (endParts[0] << 24) +
+      (endParts[1] << 16) +
+      (endParts[2] << 8) +
+      endParts[3]
+
+    if (ipNumber >= startNumber && ipNumber <= endNumber) {
+      return true // IP address falls within the current range
+    }
+  }
+
+  return false // IP address does not fall within any of the ranges
 }
 
 /**
