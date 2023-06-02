@@ -7,6 +7,25 @@ const router = express.Router()
 
 // METHODS
 /**
+ * @name checkDomainExists
+ * @description METHOD TO CHECK EXISTENCE OF DOMAIN THROUGH DNS RESOLUTION
+ * @param {*} domain DOMAIN NAME
+ * @returns {Boolean} WHETHER OR NOT THE DOMAIN EXISTS
+ */
+async function checkDomainExists(domain) {
+  return new Promise((resolve, reject) => {
+    dns.resolve(domain, (error) => {
+      // DOMAIN DOESN'T EXISTS
+      if (error && error.code === 'ENOTFOUND') resolve(false)
+      // OTHER DNS ERRORS
+      else if (error) reject(error)
+      // DOMAIN EXISTS
+      else resolve(true)
+    })
+  })
+}
+
+/**
  * @name isValidURL
  * @description METHOD TO CHECK VALIDITY OF URL
  * @param {*} url URL
@@ -43,6 +62,31 @@ const removeProtocol = (urlString) => {
   return hostname
 }
 
+/**
+ * @name isValidPerformanceData
+ * @description METHOD TO CHECK VALIDITY OF PERFORMANCE METRICS
+ * @param {*} performanceData PERFORMANCE OBJECT
+ * @returns {Boolean} WHETHER OR NOT PERF DATA IS FALSE
+ */
+const isValidPerformanceData = (performanceData) => {
+  // CHECKING RESPONSE BY TESTING AGAINST FIVE SCORE VALUES
+  if (
+    (performanceData.fcpScore == null ||
+      performanceData.fcpScore == undefined) &&
+    (performanceData.lcpScore == null ||
+      performanceData.lcpScore == undefined) &&
+    (performanceData.tbtScore == null ||
+      performanceData.tbtScore == undefined) &&
+    (performanceData.ttiScore == null ||
+      performanceData.ttiScore == undefined) &&
+    (performanceData.speedIndexScore == null ||
+      performanceData.speedIndexScore == undefined) &&
+    (performanceData.clsScore == null || performanceData.clsScore == undefined)
+  ) {
+    return false
+  } else return true
+}
+
 // HANDING ROUTES
 // RESPONDS BACK WITH STATUS
 router.get('/status', (req, res, next) => {
@@ -69,29 +113,70 @@ router.post('/report', async (req, res, next) => {
   // FOR VALID URL
   else {
     // STORING TRACEROUTING & PERFORMANCE DATA
+    const report = {
+      tracerouteData: null,
+      performanceData: null,
+      executionTimeTrace: 0,
+      executionTimePerf: 0,
+      isTracerouteError: false,
+      isLighthouseError: false,
+    }
+
+    // PERFORMING TRACEROUTING OPS
     try {
       // TRACEROUTE ONLY ACCEPTS URL WITH NO PROTOCOL
       const { tracerouteData, executionTimeTrace } = await traceroute(
         removeProtocol(url)
       )
+      // SETTING TRACEROUTING DATA
+      report.tracerouteData = tracerouteData
+      report.executionTimeTrace = executionTimeTrace
+      report.isTracerouteError = false
+    } catch (error) {
+      // SETTING TRACEROUTING DATA
+      report.isTracerouteError = true
+    }
+
+    // PERFORMING PERFORMANCE OPS
+    try {
       // TRACEROUTE ONLY ACCEPTS URL WITH PROTOCOL
       const { performanceData, executionTimePerf } = await performance(
         addProtocol(url)
       )
-      // RESPONSE
-      res.status(200).json({
-        ...performanceData,
-        traceroute: tracerouteData,
-        executionTime: executionTimePerf + executionTimeTrace,
-        isTracerouteError: tracerouteData === null,
-        isLighthouseError: performanceData === null,
-      })
-      return
+
+      // CHECKING VALIDITY OF PERFORMANCE DATA
+      if (isValidPerformanceData(performanceData)) {
+        // SETTING PERFORMANCE DATA
+        report.performanceData = performanceData
+        report.executionTimePerf = executionTimePerf
+        report.isLighthouseError = false
+      } else {
+        // SETTING PERFORMANCE DATA
+        report.performanceData = performanceData
+        report.isLighthouseError = true
+      }
     } catch (error) {
+      // SETTING PERFORMANCE DATA
+      report.isLighthouseError = true
       console.error(error)
-      res.status(500).json({ error: 'ERROR OCCURED WHILE GENERATING REPORT' })
-      return
     }
+
+    if (report.performanceData === null)
+      res.status(200).json({
+        traceroute: report.tracerouteData,
+        executionTime: report.executionTimePerf + report.executionTimeTrace,
+        isTracerouteError: report.isTracerouteError,
+        isLighthouseError: report.isLighthouseError,
+      })
+    else
+      res.status(200).json({
+        ...report.performanceData,
+        traceroute: report.tracerouteData,
+        executionTime: report.executionTimePerf + report.executionTimeTrace,
+        isTracerouteError: report.isTracerouteError,
+        isLighthouseError: report.isLighthouseError,
+      })
+    return
   }
 })
 
