@@ -139,9 +139,10 @@ router.post('/report', async (req, res, next) => {
         report.isLighthouseError = true
       }
     } catch (error) {
-      // SETTING PERFORMANCE DATA
-      report.isLighthouseError = true
       console.error(error)
+      res.status(404).json({
+        message: `PLEASE CHECK THE VALIDITY OF URL`,
+      })
     }
 
     if (report.performanceData === null)
