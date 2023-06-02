@@ -71,17 +71,17 @@ const transformPerformanceData = (PerformanceData) => {
     (MetaElement) => MetaElement.property === 'twitter:description'
   )
   const siteMeta = {
-    description: description ? description[0].content : null,
-    ogUrl: ogUrl ? ogUrl[0].content : null,
-    ogTitle: ogTitle ? ogTitle[0].content : null,
-    ogTitle: ogDescription ? ogDescription[0].content : null,
-    ogSiteName: ogSiteName ? ogSiteName[0].content : null,
-    ogName: ogName ? ogName[0].content : null,
-    ogImage: ogImage ? ogImage[0].content : null,
-    ogImageAlt: ogImageAlt ? ogImageAlt[0].content : null,
-    twitterTitle: twitterTitle ? twitterTitle[0].content : null,
+    description: description ? description[0]?.content : null,
+    ogUrl: ogUrl ? ogUrl[0]?.content : null,
+    ogTitle: ogTitle ? ogTitle[0]?.content : null,
+    ogTitle: ogDescription ? ogDescription[0]?.content : null,
+    ogSiteName: ogSiteName ? ogSiteName[0]?.content : null,
+    ogName: ogName ? ogName[0]?.content : null,
+    ogImage: ogImage ? ogImage[0]?.content : null,
+    ogImageAlt: ogImageAlt ? ogImageAlt[0]?.content : null,
+    twitterTitle: twitterTitle ? twitterTitle[0]?.content : null,
     twitterDescription: twitterDescription
-      ? twitterDescription[0].content
+      ? twitterDescription[0]?.content
       : null,
   }
 
