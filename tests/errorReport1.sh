@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d '{"url":"angular.io"}' http://localhost:3000/api/report -o ./output/angular.json
