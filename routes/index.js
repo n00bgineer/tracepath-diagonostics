@@ -54,6 +54,7 @@ const removeProtocol = (urlString) => {
 const isValidPerformanceData = (performanceData) => {
   // CHECKING RESPONSE BY TESTING AGAINST FIVE SCORE VALUES
   if (
+    performanceData &&
     (performanceData.fcpScore == null ||
       performanceData.fcpScore == undefined) &&
     (performanceData.lcpScore == null ||
@@ -105,21 +106,6 @@ router.post('/report', async (req, res, next) => {
       isLighthouseError: false,
     }
 
-    // PERFORMING TRACEROUTING OPS
-    try {
-      // TRACEROUTE ONLY ACCEPTS URL WITH NO PROTOCOL
-      const { tracerouteData, executionTimeTrace } = await traceroute(
-        removeProtocol(url)
-      )
-      // SETTING TRACEROUTING DATA
-      report.tracerouteData = tracerouteData
-      report.executionTimeTrace = executionTimeTrace
-      report.isTracerouteError = false
-    } catch (error) {
-      // SETTING TRACEROUTING DATA
-      report.isTracerouteError = true
-    }
-
     // PERFORMING PERFORMANCE OPS
     try {
       // TRACEROUTE ONLY ACCEPTS URL WITH PROTOCOL
@@ -138,17 +124,42 @@ router.post('/report', async (req, res, next) => {
           message: `PLEASE CHECK THE VALIDITY OF URL`,
         })
         report.isLighthouseError = true
+        return
       }
     } catch (error) {
       console.error(error)
       res.status(404).json({
         message: `PLEASE CHECK THE VALIDITY OF URL`,
       })
+      return
+    }
+
+    // PERFORMING TRACEROUTING OPS
+    try {
+      // TRACEROUTE ONLY ACCEPTS URL WITH NO PROTOCOL
+      const { tracerouteData, executionTimeTrace } = await traceroute(
+        removeProtocol(url)
+      )
+      // SETTING TRACEROUTING DATA
+      report.tracerouteData = tracerouteData
+      report.executionTimeTrace = executionTimeTrace
+      report.isTracerouteError = false
+    } catch (error) {
+      // SETTING TRACEROUTING DATA
+      res.status(404).json({
+        message: `SECURITY TRACEROUTING HAS FAILED`,
+      })
+      report.isLighthouseError = true
+      return
     }
 
     if (report.performanceData === null)
       res.status(404).json({
         message: `PLEASE CHECK THE VALIDITY OF URL`,
+      })
+    if (report.tracerouteData === null)
+      res.status(404).json({
+        message: `SECURITY TRACEROUTING HAS FAILED`,
       })
     else
       res.status(200).json({
