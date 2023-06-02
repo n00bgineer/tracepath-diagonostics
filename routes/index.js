@@ -145,11 +145,8 @@ router.post('/report', async (req, res, next) => {
     }
 
     if (report.performanceData === null)
-      res.status(200).json({
-        traceroute: report.tracerouteData,
-        executionTime: report.executionTimePerf + report.executionTimeTrace,
-        isTracerouteError: report.isTracerouteError,
-        isLighthouseError: report.isLighthouseError,
+      res.status(404).json({
+        message: `PLEASE CHECK THE VALIDITY OF URL`,
       })
     else
       res.status(200).json({
