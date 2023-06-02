@@ -3,28 +3,11 @@ const { URL } = require('url')
 const express = require('express')
 const traceroute = require('../methods/traceroute')
 const performance = require('../methods/performance')
+
+// INITIALISING EXPRESS ROUTER
 const router = express.Router()
 
 // METHODS
-/**
- * @name checkDomainExists
- * @description METHOD TO CHECK EXISTENCE OF DOMAIN THROUGH DNS RESOLUTION
- * @param {*} domain DOMAIN NAME
- * @returns {Boolean} WHETHER OR NOT THE DOMAIN EXISTS
- */
-async function checkDomainExists(domain) {
-  return new Promise((resolve, reject) => {
-    dns.resolve(domain, (error) => {
-      // DOMAIN DOESN'T EXISTS
-      if (error && error.code === 'ENOTFOUND') resolve(false)
-      // OTHER DNS ERRORS
-      else if (error) reject(error)
-      // DOMAIN EXISTS
-      else resolve(true)
-    })
-  })
-}
-
 /**
  * @name isValidURL
  * @description METHOD TO CHECK VALIDITY OF URL
