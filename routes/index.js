@@ -134,8 +134,9 @@ router.post('/report', async (req, res, next) => {
         report.executionTimePerf = executionTimePerf
         report.isLighthouseError = false
       } else {
-        // SETTING PERFORMANCE DATA
-        report.performanceData = performanceData
+        res.status(404).json({
+          message: `PLEASE CHECK THE VALIDITY OF URL`,
+        })
         report.isLighthouseError = true
       }
     } catch (error) {
