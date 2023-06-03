@@ -53,7 +53,7 @@ const removeProtocol = (urlString) => {
  */
 const isValidPerformanceData = (performanceData) => {
   // CHECKING RESPONSE BY TESTING AGAINST FIVE SCORE VALUES
-  if (
+  return !(
     performanceData &&
     (performanceData.fcpScore == null ||
       performanceData.fcpScore == undefined) &&
@@ -66,9 +66,7 @@ const isValidPerformanceData = (performanceData) => {
     (performanceData.speedIndexScore == null ||
       performanceData.speedIndexScore == undefined) &&
     (performanceData.clsScore == null || performanceData.clsScore == undefined)
-  ) {
-    return false
-  } else return true
+  )
 }
 
 // HANDING ROUTES
