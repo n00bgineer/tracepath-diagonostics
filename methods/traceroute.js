@@ -145,18 +145,18 @@ const geolocatePangea = async (ip) => {
  * @returns {Object} GEOLOCATION DATA
  */
 const getGeolocation = async (ip) => {
-  const maxmindRes = await geolocateMaxmind(ip)
-  if (maxmindRes !== null) {
+  const pangeaRes = await geolocatePangea(ip)
+  if (pangeaRes !== null) {
     return {
       type: 'GEOLOCATED',
-      data: maxmindRes,
+      data: pangeaRes,
     }
   } else {
-    const pangeaRes = await geolocatePangea(ip)
-    if (pangeaRes !== null) {
+    const maxmindRes = await geolocateMaxmind(ip)
+    if (maxmindRes !== null) {
       return {
         type: 'GEOLOCATED',
-        data: pangeaRes,
+        data: maxmindRes,
       }
     } else {
       return {
