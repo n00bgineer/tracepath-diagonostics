@@ -131,7 +131,7 @@ const geolocatePangea = async (ip) => {
         city: GeolocationData.result.data.city.toUpperCase(),
         postalCode: GeolocationData.result.data.postal_code,
         latitude: GeolocationData.result.data.latitude,
-        longitude: GeolocationData.result.data.country.longitude,
+        longitude: GeolocationData.result.data.longitude,
       }
     } else throw 'CANNOT BE GEOLOCATED'
   } catch (error) {
