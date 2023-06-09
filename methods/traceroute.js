@@ -104,8 +104,10 @@ const geolocateMaxmind = async (ip) => {
  * @returns {Object} GEOLOCATION DATA
  */
 const geolocatePangea = async (ip) => {
-  // SETTING LOCAL VARIABLES
-  const token = process.env.PANGEA_TOKEN
+  // SETTING LOCAL VARIABLESc
+  const availableTokens = 3
+  const token =
+    process.env[`PANGEA_TOKEN${Math.floor(Math.random() * availableTokens)}`] //SELECTING RANDOM TOKEN
   const url = 'https://ip-intel.aws.us.pangea.cloud/v1/geolocate'
   const options = {
     method: 'POST',
