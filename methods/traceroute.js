@@ -66,7 +66,7 @@ const isPrivateIP = (ip) => {
 
 /**
  * @name geolocateMaxmind
- * @description GEOLOCATING USING MAXMIND'S NODE SDK
+ * @description METHOD TO GEOLOCATE USING MAXMIND'S NODE SDK
  * @param {*} ip IP ADDRESS
  * @returns {Object} GEOLOCATION DATA
  */
@@ -92,14 +92,14 @@ const geolocateMaxmind = async (ip) => {
       }
     }
   } catch (error) {
-    console.log(`ERROR (GEOLOCATION/PANGEA): `, error.code)
+    console.log(`ERROR (GEOLOCATION/MAXMIND): `, error.code)
     return null
   }
 }
 
 /**
  * @name geolocatePangea
- * @description GEOLOCATING USING PANGEA'S IP INTEL API
+ * @description METHOD TO GEOLOCATE USING PANGEA'S IP INTEL API
  * @param {*} ip IP ADDRESS
  * @returns {Object} GEOLOCATION DATA
  */
@@ -135,7 +135,49 @@ const geolocatePangea = async (ip) => {
       }
     } else throw 'CANNOT BE GEOLOCATED'
   } catch (error) {
-    console.log(`ERROR (GEOLOCATION/MAXMIND): `, error)
+    console.log(`ERROR (GEOLOCATION/PANGEA): `, error)
+    return null
+  }
+}
+
+/**
+ * @name reputationPangea
+ * @description METHOD TO PERFORM IP THREAT/REPUTATION ANALYSIS
+ * @param {*} ip IP ADDRESS
+ * @returns {Object} REPUTATION DATA
+ */
+const reputationPangea = async (ip) => {
+  // SETTING LOCAL VARIABLESc
+  const availableTokens = 3
+  const token =
+    process.env[`PANGEA_TOKEN${Math.floor(Math.random() * availableTokens)}`]
+  const url = 'https://ip-intel.aws.us.pangea.cloud/v1/reputation'
+
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ip: '11.11.11.11',
+    }),
+  }
+
+  // EXECUTING GEOLOCATION
+  try {
+    const response = await fetch(url, options)
+    const ReputationData = await response.json()
+    if (ReputationData.status.toUpperCase() === 'SUCCESS') {
+      return {
+        score: ReputationData.result.data.score,
+        verdict: ReputationData.result.data.verdict,
+        category: ReputationData.result.data.category,
+        summary: ReputationData.summary,
+      }
+    } else throw 'IP REPUTATION CANNOT BE ASCERTAINED'
+  } catch (error) {
+    console.log(`ERROR (REPUTATION/PANGEA): `, error)
     return null
   }
 }
@@ -233,9 +275,13 @@ const traceroute = async (url) => {
               if (Hop.type === 'PUBLIC') {
                 console.log(`GEOLOCATING FOR ${Hop.ip}`)
                 const GeolocationData = await getGeolocation(Hop.ip)
+
+                console.log(`CHECKING IP REPUTATION FOR ${Hop.ip}`)
+                const ReputationData = await reputationPangea(Hop.ip)
                 return {
                   ...Hop,
                   ...GeolocationData,
+                  reputation: ReputationData,
                 }
               } else return Hop
             })
