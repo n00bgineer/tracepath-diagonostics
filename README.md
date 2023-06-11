@@ -60,10 +60,6 @@ GET /api/status: Check if the server is running and responsive.
 POST /api/report: Submit a report generation request to the server.
 ```
 
-## API Documentation
-
-For detailed information about each endpoint and how to use them, refer to the API documentation. The documentation is available at http://localhost:3000/api-docs when the server is running.
-
 ## Contributing
 
 Contributions are welcome! If you find any issues or want to add new features, please open an issue or submit a pull request to the GitHub repository.
