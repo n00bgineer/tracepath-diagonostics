@@ -13,71 +13,43 @@ This repository contains the code for the **diagnostic server** of Tracepath. Th
 ## Pangea API usage
 
 Curently, two API endpoints of Pangea have been used to implement the security tracerouting feature, which is a combination of IP geolocation & IP threat/reputation score:
+
 1. IP (Reputation) Geolocation Endpoint
 2. IP (Reputation) Reputation Endpoint
+
+You can find it's implementation in [`/methods/traceroute.js`](https://github.com/n00bgineer/tracepath-diagonostics/blob/master/methods/traceroute.js), where the security tracerouting feature has been implemented.
 
 ## Getting Started
 
 To set up the diagnostic server locally, follow the instructions below:
 
-### Prerequisites
+### Manual Setup
 
-Make sure you have the following software installed on your machine:
-
-- Node.js (LTS)
   ```
   node -v
-  ```
-- npm (Node Package Manager)
-
-  ```
   npm -v
-  ```
-
-- traceroute
-  ```
   sudo apt-get install traceroute
-  ```
-- Chromium/Chrome browser
-
-  ```
   sudo apt install -y chromium-browser
+  git clone https://github.com/n00bgineer/tracepath-diagonostics.git ./diagonostic  
+  cd diagnostic
+  npm install
+  bash /scripts/setup_prisma.sh
+  npm start
   ```
-
-### Installation
-
-```
-# Clone the repository to your local machine
-git clone https://github.com/n00bgineer/tracepath-diagonostics.git ./diagonostic
-
-# Change into the project directory
-cd diagnostic
-
-# Install the dependencies
-npm install
-```
-
+### Automated Setup (Setup)
+  ```
+  git clone https://github.com/n00bgineer/tracepath-diagonostics.git ./diagonostic  
+  cd diagnostic
+  sudo bash /scripts/setup.sh
+  bash /scripts/setup_prisma.sh
+  npm install
+  npm start
+  ```
 ### Configuration
-
 The server requires a configuration file to run properly. Create a file named .env in the root directory of the project and define the following environment variables:
-
 ```
 PORT=3000 # The port on which the server should listen
 ```
-
-### Starting the Server
-
-To start the server, run the following command:
-
-```
-npm start
-```
-
-The server will start running on the specified port (default: 3000). You can access it via http://localhost:3000.
-
-## Automated Setup (Setup)
-
-🚧 TBD
 
 ## API Endpoints
 
